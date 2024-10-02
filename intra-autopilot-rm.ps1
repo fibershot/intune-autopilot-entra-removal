@@ -73,19 +73,21 @@
     $devicesDeleted = $false
     Write-Host("Checking if devices have been deleted before continuing")
     Write-Host("[INFO] Waiting for five minutes...")
-    while (-not $devicesDeleted){
-        Start-Sleep -Seconds (1 * 60)
-        $Devices = Get-MgDeviceManagementManagedDevice -All
-        $matchingDevices = $Devices | Where-Object { $serials -contains $_.SerialNumber }
-        if ($matchingDevices.Count -eq 0) {
-            Write-Host("[Info] All devices have been successfully deleted, continuing.`n`n")
-            $allDeleted = $true
-        } else {
-            Write-Host("[Info] Devices still found. Waiting another 1 minutes...")
-            
-            # Inform user what devices are still left
-            Foreach ($Device in $matchingDevices) {
-                Write-Host("[Info] Device still found: " + $Device.SerialNumber + " " + $Device.Id)
+    if (-not $continueWithNoDevices -eq "y"){
+        while (-not $devicesDeleted){
+            Start-Sleep -Seconds (1 * 60)
+            $Devices = Get-MgDeviceManagementManagedDevice -All
+            $matchingDevices = $Devices | Where-Object { $serials -contains $_.SerialNumber }
+            if ($matchingDevices.Count -eq 0) {
+                Write-Host("[Info] All devices have been successfully deleted, continuing.`n`n")
+                $allDeleted = $true
+            } else {
+                Write-Host("[Info] Devices still found. Waiting another 1 minutes...")
+                
+                # Inform user what devices are still left
+                Foreach ($Device in $matchingDevices) {
+                    Write-Host("[Info] Device still found: " + $Device.SerialNumber + " " + $Device.Id)
+                }
             }
         }
     }
