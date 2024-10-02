@@ -23,6 +23,7 @@
 
     Write-Host("[Info] Searching serial(s): $($serials)")
 
+    # Intune segment
     # Fetch all of the data
     # Parse serial numbers from fetched data and save matches of the .cvs file
     $Devices = Get-MgDeviceManagementManagedDevice -All
@@ -48,11 +49,9 @@
     }
 
 
-    # Device Deletion for Intune --------------------------------------------------------------------------------------------------------
     # Ask the user for confirmation after posting a listing of the devices
     # If confirmation goes through, delete the devices from Intune with the $Device.Id
     # If the confirmation is rejected, do not do changes and terminate the program
-
     # If no devices were found and the user wishes to continue to autopilot, skip this statement
     if (-not $continueWithNoDevices -eq "y"){
         $confirmation = Read-Host "`n[Intune] Found devices listed above will be deleted from Intune.`n[Prompt] Are you sure you want to proceed? (y/N)"
@@ -70,8 +69,28 @@
         }
     }
 
-    # Device deletion for AutoPilot -----------------------------------------------------------------------------------------------------
+    # Check if devices are deleted
+    $devicesDeleted = $false
+    Write-Host("Checking if devices have been deleted before continuing")
+    Write-Host("[INFO] Waiting for five minutes...")
+    while (-not $devicesDeleted){
+        Start-Sleep -Seconds (1 * 60)
+        $Devices = Get-MgDeviceManagementManagedDevice -All
+        $matchingDevices = $Devices | Where-Object { $serials -contains $_.SerialNumber }
+        if ($matchingDevices.Count -eq 0) {
+            Write-Host("[Info] All devices have been successfully deleted, continuing.`n`n")
+            $allDeleted = $true
+        } else {
+            Write-Host("[Info] Devices still found. Waiting another 1 minutes...")
+            
+            # Inform user what devices are still left
+            Foreach ($Device in $matchingDevices) {
+                Write-Host("[Info] Device still found: " + $Device.SerialNumber + " " + $Device.Id)
+            }
+        }
+    }
 
+    # Autopilot segment
     # Fetch Autopilot devices
     $fetchAPD = Invoke-MSGraphRequest -HttpMethod GET -Url "deviceManagement/windowsAutopilotDeviceIdentities"
     $autoPilotDevices = $fetchAPD.value
@@ -126,4 +145,36 @@
             exit(0)
         }
     } 
+
+    # Check if devices are deleted
+    $devicesDeleted = $false
+    Write-Host("Checking if devices have been deleted before continuing")
+    Write-Host("[INFO] Waiting for five minutes...")
+    while (-not $devicesDeleted) {
+        Start-Sleep -Seconds (1 * 60)
+
+        $fetchAPD = Invoke-MSGraphRequest -HttpMethod GET -Url "deviceManagement/windowsAutopilotDeviceIdentities"
+        $autoPilotDevices = $fetchAPD.value
+
+        $parseAPD = $fetchAPD."@odata.nextLink"
+
+        while ($parseAPD) {
+            $fetchAPD = Get-MSGraphNextPage -NextLink $parseAPD
+            $parseAPD = $fetchAPD."@odata.nextLink"
+            $autoPilotDevices += $fetchAPD.value
+        }
+
+        $matchingAPDevices = $autoPilotDevices | Where-Object { $serials -contains $_.serialNumber }
+        if ($matchingAPDevices.Count -eq 0) {
+            Write-Host("[Success] All devices have been successfully deleted from Autopilot.")
+            $allDeleted = $true
+        } else {
+            Write-Host("[Info] Devices still found in Autopilot. Waiting another $checkIntervalMinutes minutes...")
+            Foreach ($Device in $matchingAPDevices) {
+                Write-Host("[Info] Device still found: $($Device.serialNumber) with display name: $($Device.displayName)")
+            }
+        }
+    }
+
+    Write-Host("[Info] Proceeding to the next segment of the script.")
 }
