@@ -82,7 +82,7 @@
                 Write-Host("[Info] All devices have been successfully deleted, continuing.`n`n")
                 $devicesDeleted = $true
             } else {
-                Write-Host("[Info] Devices still found. Waiting another 1 minutes...")
+                Write-Host("[Info] Devices still found. Waiting another minute...")
                 
                 # Inform user what devices are still left
                 Foreach ($Device in $matchingDevices) {
@@ -171,7 +171,7 @@
             Write-Host("[Success] All devices have been successfully deleted from Autopilot.")
             $devicesDeleted = $true
         } else {
-            Write-Host("[Info] Devices still found in Autopilot. Waiting another $checkIntervalMinutes minutes...")
+            Write-Host("[Info] Devices still found in Autopilot. Waiting another minute...")
             Foreach ($Device in $matchingAPDevices) {
                 Write-Host("[Info] Device still found: $($Device.serialNumber) with display name: $($Device.displayName)")
             }
