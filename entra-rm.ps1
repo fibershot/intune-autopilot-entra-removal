@@ -1,5 +1,6 @@
-# Import required module
+# Import required modules
 Import-Module Microsoft.Graph.Authentication -RequiredVersion "2.15.0"
+Import-Module Microsoft.Graph.Entra
 
 # Connect to Entra and fetch all devices
 Connect-Entra -Scopes "Device.Read.All"
