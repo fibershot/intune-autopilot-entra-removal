@@ -1,6 +1,6 @@
 # PowerShell 7 doesn't support MsGraph anymore, so we'll use a workaround to use PowerShell 5 instead
 & "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -version 5 -Command {
-    $APP_ID = "Enter your APP ID here."
+    $APP_ID = "ID_HERE"
 
     # Get serial numbers from .csv file.
     $serials = Get-Content .\serials.csv
@@ -72,7 +72,7 @@
     # Check if devices are deleted
     $devicesDeleted = $false
     Write-Host("Checking if devices have been deleted before continuing")
-    Write-Host("[INFO] Waiting for five minutes...")
+    Write-Host("[Info] Waiting for one minute...")
     if (-not $continueWithNoDevices -eq "y"){
         while (-not $devicesDeleted){
             Start-Sleep -Seconds (1 * 60)
@@ -80,7 +80,7 @@
             $matchingDevices = $Devices | Where-Object { $serials -contains $_.SerialNumber }
             if ($matchingDevices.Count -eq 0) {
                 Write-Host("[Info] All devices have been successfully deleted, continuing.`n`n")
-                $allDeleted = $true
+                $devicesDeleted = $true
             } else {
                 Write-Host("[Info] Devices still found. Waiting another 1 minutes...")
                 
@@ -169,7 +169,7 @@
         $matchingAPDevices = $autoPilotDevices | Where-Object { $serials -contains $_.serialNumber }
         if ($matchingAPDevices.Count -eq 0) {
             Write-Host("[Success] All devices have been successfully deleted from Autopilot.")
-            $allDeleted = $true
+            $devicesDeleted = $true
         } else {
             Write-Host("[Info] Devices still found in Autopilot. Waiting another $checkIntervalMinutes minutes...")
             Foreach ($Device in $matchingAPDevices) {
