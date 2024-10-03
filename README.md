@@ -1,5 +1,6 @@
 # intune-autopilot-entra-removal
-Scripts, which were created for the removal of devices with serial numbers in Intune, Autopilot and Entra.
+Scripts, which were created for the removal of devices with serial numbers in Intune, Autopilot and Entra.<br/>
+<strong>Is unstable, do not use yet, in production.</strong>
 
 # Information ℹ️
 The hellscape that are the Windows PowerShell modules and dependencies, I wanted to find out what the minimal requirements were (for me) for a safe (arguable) way to remove devices from Intune, Autopilot and Entra with a script.
