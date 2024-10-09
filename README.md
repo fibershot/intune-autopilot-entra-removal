@@ -15,6 +15,7 @@ I've tried to add as many safety checks as possible, so deletion won't happen wi
 
 The use case for the following scripts are as follows:
  - Your devices contain the serial number within their display names! (e.g EDC99<strong>ABC123456</strong> where ABC123456 is the serial)
+   - In the Entra script the script will check the last 8 chars of the DisplayName!
  - Make sure serials.csv contains the full serial numbers seperated by a linebreak!
  - Before confirming deletion, make sure to check only the devices you listed in .csv are present!
 Safety checks:
@@ -23,7 +24,6 @@ Safety checks:
  - Require user confirmation before deletion
  - Log in the console which devices were deleted
  - Do not change anything if the user declines deletion
- - If no devices are found skip automatically
 
 # Requirements 📝
 Entra script will run on PowerShell 7 or higher
