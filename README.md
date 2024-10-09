@@ -31,11 +31,11 @@ Entra script will run on PowerShell 7 or higher
  - Learn more here [Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
 There is a script for installing the following modules. Please read before continuing.
-    AzureAD                                Version - 2.0.2.182
-    Microsoft.Graph.Authentication         Version - 2.23.0
-    Microsoft.Graph.DeviceManagement       Version - 2.23.0
-    Microsoft.Graph.Intune"                Version - 6.1907.1.0
-    Microsoft.Graph.Entra                  Version - 0.15.0
+ - AzureAD                                Version - 2.0.2.182
+ - Microsoft.Graph.Authentication         Version - 2.23.0
+ - Microsoft.Graph.DeviceManagement       Version - 2.23.0
+ - Microsoft.Graph.Intune                Version - 6.1907.1.0
+ - Microsoft.Graph.Entra                  Version - 0.15.0
 
 # Usage 📜
 ExecutionPolicy:<br/>
