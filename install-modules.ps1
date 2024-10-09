@@ -27,3 +27,4 @@ Install-ModuleIfNotPresent -ModuleName "AzureAD" -RequiredVersion "2.0.2.182"
 Install-ModuleIfNotPresent -ModuleName "Microsoft.Graph.Authentication" -RequiredVersion "2.23.0"
 Install-ModuleIfNotPresent -ModuleName "Microsoft.Graph.DeviceManagement" -RequiredVersion "2.23.0"
 Install-ModuleIfNotPresent -ModuleName "Microsoft.Graph.Intune" -RequiredVersion "6.1907.1.0"
+Install-Module Microsoft.Graph.Entra -AllowPrerelease -Repository PSGallery -Force

@@ -1,35 +1,39 @@
-# Import required modules
+# Get serials from serials.csv
+# If serials.csv is empty: exit
+$serials = Get-Content .\serials.csv
+if (!$serials){Write-Host("[Alert] serials.csv file empty!"); exit}
+
+# Connect to Entra and add devices to $entraDevices
 Import-Module Microsoft.Graph.Authentication -RequiredVersion "2.15.0"
-Import-Module Microsoft.Graph.Entra
+Connect-Entra -Scopes "Device.Read.All" -NoWelcome
+$entraDevices = Get-EntraDevice -All
 
-# Connect to Entra and fetch all devices
-Connect-Entra -Scopes "Device.Read.All"
-$entraDevices = Get-EntraDevice
-$matchingEntraDevices = $entraDevices | Where-Object { $entraDevices.DisplayName -contains $_.SerialNumber }
-
-Write-Host("[Info] Found device: $($matchingEntraDevices.DisplayName)")
-
-# If there are no devices, exit
-if ($matchingEntraDevices.SerialNumber.Length -le 0) {
-    Write-Host("[Alert] No devices found with matching IDs!")
-    exit(0)
-} else {
-    Foreach ($Device in $matchingEntraDevices)
-    {
-        Write-Host("[Info] Found " + $Device. + $Device.id)
+# Create an empty array to store matching devices
+$matchingEntraDevices = @()
+# Check if serials.csv matches the last 8 characters of the DisplayName
+foreach ($serial in $serials) {
+    $matchedDevices = $entraDevices | Where-Object {
+        if ($_.DisplayName.Length -gt 8) {
+            $_.DisplayName.Substring($_.DisplayName.Length - 8) -match [regex]::Escape($serial)
+        }
     }
+    $matchingEntraDevices += $matchedDevices
 }
 
-# Confirmation and deletion of devices
-$confirmation = Read-Host "`n[Entra] Found devices listed above will be deleted from Entra.`n[Prompt] Are you sure you want to proceed? (y/N)"
+# Display device amount and their corresponding names
+Write-Host("Added following devices to list [amount: $($matchingEntraDevices.Count)]:`n $($matchingEntraDevices.DisplayName -join ' | ')")
+
+# Confirmation and Deletion Process
+$confirmation = Read-Host "`nFound devices listed above will be deleted from Entra. Are you sure you want to proceed? (Y/N)"
 if ($confirmation -eq 'y') {
-    Write-Host("[Entra] Accepted. Deleting $($matchingEntraDevices.Count) devices from Entra")
-    Foreach($device in $matchingEntraDevices) 
-    {
-        Write-Host "[Info] Deleting device $($device.id), serial: $($device.serialNumber)) from Entra"
-        Remove-AzureADDevice -ObjectId $device.azureActiveDirectoryDeviceId
-    }
-} else {
-    Write-Host("[Info] User cancelled deletion.")
+    Write-Host("Accepted. Deleting $($matchingEntraDevices.Count) devices from Entra")
+    Foreach ($Device in $matchingEntraDevices)
+        {
+            Write-Host("Deleting device: $($Device.DisplayName) with the ID: $($Device.ObjectId)")
+            Remove-EntraDevice -ObjectId $Device.ObjectId
+        }
+} 
+else {
+    Write-Host("User cancelled deletion.")
     exit(0)
 }

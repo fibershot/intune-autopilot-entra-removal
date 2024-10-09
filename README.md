@@ -14,7 +14,7 @@ Please read the source code for the scripts to make sure the use case is safe fo
 I've tried to add as many safety checks as possible, so deletion won't happen without your consent!
 
 The use case for the following scripts are as follows:
- - Your devices contain the serial number within their display names!
+ - Your devices contain the serial number within their display names! (e.g EDC99<strong>ABC123456</strong> where ABC123456 is the serial)
  - Make sure serials.csv contains the full serial numbers seperated by a linebreak!
  - Before confirming deletion, make sure to check only the devices you listed in .csv are present!
 Safety checks:
@@ -31,12 +31,16 @@ Entra script will run on PowerShell 7 or higher
  - Learn more here [Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
 There is a script for installing the following modules. Please read before continuing.
- - AzureAD -RequiredVersion "2.0.2.182"
- - Microsoft.Graph.Authentication -RequiredVersion "2.23.0"
- - Microsoft.Graph.DeviceManagement -RequiredVersion "2.23.0"
- - Microsoft.Graph.Intune -RequiredVersion "6.1907.1.0"
+    AzureAD                                Version - 2.0.2.182
+    Microsoft.Graph.Authentication         Version - 2.23.0
+    Microsoft.Graph.DeviceManagement       Version - 2.23.0
+    Microsoft.Graph.Intune"                Version - 6.1907.1.0
+    Microsoft.Graph.Entra                  Version - 0.15.0
 
 # Usage 📜
+ExecutionPolicy:<br/>
+Set-ExecutionPolicy Unrestricted -Scope CurrentUser
+
 <strong>Using PowerShell 5:</strong><br/>
 Run .\install-modules.ps1 to install the required modules and their versions.<br/>
 Run .\intra-autopilot-rm.ps1 to remove devices from Intune and Autopilot.
@@ -44,7 +48,7 @@ Run .\intra-autopilot-rm.ps1 to remove devices from Intune and Autopilot.
 
 <strong>Using PowerShell 7 or higher:</strong><br/>
 Run .\entra-rm.ps1 to remove devices from Entra.
-Open a terminal for PowerShell 7 or higher .
+Open a terminal for PowerShell 7 or higher.
 
 In both cases login to your Microsoft account and follow the instuctions on the screen.<br/>No other user input is required after login that isn't yes or no (Y/N).
 
