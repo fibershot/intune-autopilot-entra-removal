@@ -1,10 +1,10 @@
-# intune-autopilot-entra-removal
+# intune-autopilot-entra-removal 
 Scripts, which were created for the removal of devices with serial numbers in Intune, Autopilot and Entra.<br/>
-<strong>Is unstable, do not use yet, in production.</strong>
 
 # Information ℹ️
-The hellscape that are the Windows PowerShell modules and dependencies, I wanted to find out what the minimal requirements were (for me) for a safe (arguable) way to remove devices from Intune, Autopilot and Entra with a script.
-Anywhere I looked stuff was out of date or simply not working. These scripts have been tested as working as of 1.10.2024 on a new device.
+The hellscape that are the Windows PowerShell modules and dependencies, I wanted to find out what the minimal requirements were (for me) for a safe (arguable) way to remove devices from Intune, Autopilot and Entra with a script. Anywhere I looked stuff was out of date or simply not working.
+
+These scripts have been tested to be working on a brand new computer as of 9.10.2024.
 
 If you have questions you can send an email to tonkotop@tonko.top
 
@@ -26,26 +26,26 @@ Safety checks:
  - If no devices are found skip automatically
 
 # Requirements 📝
-All of the scripts run (or have ran) on PowerShell 7.4.5
+Entra script will run on PowerShell 7 or higher
  - Download PowerShell here [PowerShell releases](https://github.com/PowerShell/PowerShell/releases)
  - Learn more here [Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
 There is a script for installing the following modules. Please read before continuing.
- - Microsoft.Graph
- - Microsoft.Graph.Entra
- - Microsoft.Graph.Authentication (Versions 2.15.0 & 2.23.0)
- - AzureAd
-The scope for the modules has been set to use the -Scope of AllUsers.
+ - AzureAD -RequiredVersion "2.0.2.182"
+ - Microsoft.Graph.Authentication -RequiredVersion "2.23.0"
+ - Microsoft.Graph.DeviceManagement -RequiredVersion "2.23.0"
+ - Microsoft.Graph.Intune -RequiredVersion "6.1907.1.0"
 
 # Usage 📜
-Open (intune autopilot).ps1 to input your APP_ID in the -AppId argument and save the file.<br/>Nothing has to be changed for (entra script name).ps1
+<strong>Using PowerShell 5:</strong><br/>
+Run .\install-modules.ps1 to install the required modules and their versions.<br/>
+Run .\intra-autopilot-rm.ps1 to remove devices from Intune and Autopilot.
+ - Note: Add your appId at the start of the script and save before running.
 
-Open a terminal for PowerShell 7 or higher (Recommended to use administrator).
+<strong>Using PowerShell 7 or higher:</strong><br/>
+Run .\entra-rm.ps1 to remove devices from Entra.
+Open a terminal for PowerShell 7 or higher .
 
-Use (insert script name here) to check if the modules are installed. If they aren't the script attempts to install them.
-
-For Intune and Autopilot removal execute .\scriptname.ps1<br/>For Entra removal execute .\scriptname2.ps1
-
-First login to your Microsoft account and follow the instuctions on the screen.<br/>No other user input is required after login that isn't yes or no (Y/N).
+In both cases login to your Microsoft account and follow the instuctions on the screen.<br/>No other user input is required after login that isn't yes or no (Y/N).
 
 It's (hopefully) really that simple!
