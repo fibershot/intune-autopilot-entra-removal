@@ -63,16 +63,15 @@ if (-not $continueWithNoDevices -eq "y"){
     } 
     else {
         Write-Host("[Info] User cancelled deletion.`n`n")
-	    $continueWithNoDevices = "y"
     }
 }
 
 # Check if devices are deleted every one minute
 # If they're deleted, continue to next segment
+$devicesDeleted = $false
+Write-Host("Checking if devices have been deleted before continuing")
+Write-Host("[Info] Waiting for one minute...")
 if (-not $continueWithNoDevices -eq "y"){
-    Write-Host("[Info]Checking if devices have been deleted before continuing")
-    Write-Host("[Info] Waiting for one minute...")
-    $devicesDeleted = $false
     while (-not $devicesDeleted){
         Start-Sleep -Seconds (1 * 60)
         $Devices = Get-MgDeviceManagementManagedDevice -All
