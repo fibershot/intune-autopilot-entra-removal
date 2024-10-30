@@ -21,19 +21,19 @@ foreach ($serial in $serials) {
 }
 
 # Display device amount and their corresponding names
-Write-Host("Added following devices to list [amount: $($matchingEntraDevices.Count)]:`n $($matchingEntraDevices.DisplayName -join ' | ')")
+Write-Host("[Info] Added following devices to list [amount: $($matchingEntraDevices.Count)]:`n $($matchingEntraDevices.DisplayName -join ' | ')")
 
 # Confirmation and Deletion Process
-$confirmation = Read-Host "`nFound devices listed above will be deleted from Entra. Are you sure you want to proceed? (Y/N)"
+$confirmation = Read-Host "`n[Entra] Found devices listed above will be deleted from Entra. Are you sure you want to proceed? (Y/N)"
 if ($confirmation -eq 'y') {
-    Write-Host("Accepted. Deleting $($matchingEntraDevices.Count) devices from Entra")
+    Write-Host("[Entra] Accepted. Deleting $($matchingEntraDevices.Count) devices from Entra")
     Foreach ($Device in $matchingEntraDevices)
         {
-            Write-Host("Deleting device: $($Device.DisplayName) with the ID: $($Device.ObjectId)")
+            Write-Host("[Entra] Deleting device: $($Device.DisplayName) with the ID: $($Device.ObjectId)")
             Remove-EntraDevice -ObjectId $Device.ObjectId
         }
 } 
 else {
-    Write-Host("User cancelled deletion.")
+    Write-Host("[Info] User cancelled deletion.")
     exit(0)
 }
