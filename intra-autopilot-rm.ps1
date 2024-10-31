@@ -130,22 +130,19 @@ if ($matchingAPDevices.SerialNumber.Length -gt $serials.Length){
 # Ask the user for confirmation after posting a listing of the devices
 # If confirmation goes through, delete the devices from Autopilot with the $Device.id
 # If the confirmation is rejected, do not do changes and terminate the program
-
-if (-not $Automated) {
-    $confirmation = Read-Host "`n[Autopilot] Found devices listed above will be deleted from Autopilot.`n[Prompt] Are you sure you want to proceed? (y/N)"
-    if ($confirmation -eq 'y') {
-        Write-Host("[Autopilot] Accepted. Deleting $($matchingAPDevices.Count) devices from Autopilot")
-        Foreach ($Device in $matchingAPDevices)
-        {
-            Write-Host("[Info] Deleting device: $($Device.serialNumber) with the screen name $($Device.displayName)")
-            Invoke-MSGraphRequest -HttpMethod DELETE -Url "deviceManagement/windowsAutopilotDeviceIdentities/$($Device.id)"
-        } 
+$confirmation = Read-Host "`n[Autopilot] Found devices listed above will be deleted from Autopilot.`n[Prompt] Are you sure you want to proceed? (y/N)"
+if ($confirmation -eq 'y') {
+    Write-Host("[Autopilot] Accepted. Deleting $($matchingAPDevices.Count) devices from Autopilot")
+    Foreach ($Device in $matchingAPDevices)
+    {
+        Write-Host("[Info] Deleting device: $($Device.serialNumber) with the screen name $($Device.displayName)")
+        Invoke-MSGraphRequest -HttpMethod DELETE -Url "deviceManagement/windowsAutopilotDeviceIdentities/$($Device.id)"
     } 
-    else {
-        Write-Host("[Info] User cancelled deletion.")
-        exit(0)
-    }
 } 
+else {
+    Write-Host("[Info] User cancelled deletion.")
+    exit(0)
+}
 
 # Check if devices are deleted every minute
 # If they're deleted, continue to the end
